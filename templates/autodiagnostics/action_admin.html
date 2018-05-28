@@ -1,0 +1,41 @@
+[#if OK_MSG!=""#]
+<div class="alert alert-success">[#OK_MSG#]</div>
+[#endif#]
+
+<!-- table zwave_devices search -->
+<div  id='api_settings'>
+&nbsp;
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form">
+<fieldset>
+<div class="form-group">
+ <label for="link_code" class="control-label">
+ Link Code:
+  <#LANG_HCB#>diagnosticscode<#LANG_HCE#>
+ </label>
+ <input type="text" name="link_code" id="link_code" value="[#LINK_CODE#]" class="form-control">
+</div>
+ <div class="form-group">
+  <label for="post_every" class="control-label">
+   Post diagnostics data automatically every... (<#LANG_HOURS#>):
+  </label>
+  <select name="post_every" id="post_every" class="form-control">
+   <option value="0">Disabled</option>
+   <option value="6"[#if POST_EVERY="6"#] selected[#endif#]>6</option>
+   <option value="12"[#if POST_EVERY="12"#] selected[#endif#]>12</option>
+   <option value="24"[#if POST_EVERY="24"#] selected[#endif#]>24</option>
+  </select>
+ </div>
+<div class="form-group">
+<button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_UPDATE#></button>
+<input type="hidden" name="view_mode" value="update_settings">
+<input type="hidden" name="mode" value="update">
+</div>
+</fieldset>
+</form>
+</div>
+[#if LINK_CODE!=""#]
+<hr>
+<div>
+ <a href="?view_mode=send_data" class="btn btn-default btn-success">Send diagnostic data now</a>
+</div>
+[#endif#]
