@@ -139,6 +139,9 @@ function admin(&$out) {
 
 function sendDataNow() {
     DebMes("Sending out diagnostics data",'diagnostics');
+
+    $locale = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? strip_tags($_SERVER['HTTP_ACCEPT_LANGUAGE']) : 'unknown';
+
     $fields=array(
       'code'=>$this->config['LINK_CODE'],
       'send'=>'1',
@@ -147,15 +150,15 @@ function sendDataNow() {
     
     $url = BASE_URL.'/diagnostic.php';
     $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL, $url);
-    curl_setopt($ch,CURLOPT_POST, count($fields));
-    curl_setopt($ch,CURLOPT_POSTFIELDS, $fields);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT, 60);
-    curl_setopt($ch,CURLOPT_TIMEOUT, 120);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: $locale"));
     $result = curl_exec($ch);
 
     DebMes("Server response: \n".$result,'diagnostics');
@@ -201,6 +204,17 @@ function usual(&$out) {
  function install($data='') {
   subscribeToEvent($this->name, 'HOURLY');
   parent::install();
+ }
+ /**
+* Uninstall
+*
+* Module uninstall routine
+*
+* @access public
+*/
+ function uninstall() {
+  unsubscribeFromEvent($this->name, 'HOURLY');
+  parent::uninstall();
  }
 // --------------------------------------------------------------------
 }
